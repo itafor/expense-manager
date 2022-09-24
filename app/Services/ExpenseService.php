@@ -7,6 +7,7 @@ use App\Traits\Response;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 /**
  *
@@ -18,13 +19,14 @@ class ExpenseService
     public function addExpense($data)
     {
         try {
+
             $expense = new Expense();
             $expense->user_id = auth()->user()->id;
             $expense->merchant = $data['merchant'];
             $expense->total_amount = $data['total_amount'];
             $expense->date = $data['date'];//Carbon::parse($this->formatDate($data['date'], 'm/d/Y', 'Y-m-d'));
             $expense->comment = isset($data['comment']) ? $data['comment'] : null;
-            $expense->receipt_url = isset($data['receipt']) ? $this->uploadFile($data['receipt'])['full_path'] : null;
+            $expense->receipt_url = isset($data['receipt_url']) ? $data['receipt_url'] : null;
             $expense->save();
 
             return $this->success(false, "Expense successfully added!", $expense, 200);
@@ -47,7 +49,7 @@ class ExpenseService
             $expense->total_amount = $data['total_amount'];
             $expense->date = $data['date']; //Carbon::parse($this->formatDate($data['date'], 'm/d/Y', 'Y-m-d'));
             $expense->comment = isset($data['comment']) ? $data['comment'] :  $expense->comment;
-            $expense->receipt_url = isset($data['receipt']) ? $this->uploadFile($data['receipt'])['full_path'] : $expense->receipt_url;
+            $expense->receipt_url = isset($data['receipt_url']) ? $data['receipt_url'] : $expense->receipt_url;
             $expense->status = isset($data['status']) ? $data['status'] : $expense->status;
 
             $expense->save();

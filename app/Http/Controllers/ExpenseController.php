@@ -9,6 +9,8 @@ use App\Traits\Response;
 use Exception;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 
 class ExpenseController extends Controller
 {
@@ -34,6 +36,8 @@ class ExpenseController extends Controller
              $request->validate([
             "receipt" => 'required|file|mimes:jpg,jpeg,png|max:5540',
         ]);
+             $uploadedFileUrl = cloudinary()->upload($request->file('receipt')->getRealPath())->getSecurePath();
+            $validated['receipt_url'] = $uploadedFileUrl;
         }
 
         return $this->expenseService->addExpense($validated);
@@ -55,6 +59,8 @@ class ExpenseController extends Controller
              $request->validate([
             "receipt" => 'required|file|mimes:jpg,jpeg,png|max:5540',
         ]);
+             $uploadedFileUrl = cloudinary()->upload($request->file('receipt')->getRealPath())->getSecurePath();
+            $validated['receipt_url'] = $uploadedFileUrl;
         }
 
         return $this->expenseService->updateExpense($validated);
